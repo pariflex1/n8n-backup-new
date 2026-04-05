@@ -1,0 +1,940 @@
+{
+  "name": "AI Facebook Image Post",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://thecurveconsultants.com/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": "=attachment; filename=\"thecurve-{{ $now }}.jpg\""
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/jpeg"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1904,
+        -256
+      ],
+      "id": "414953b6-7980-4e8a-84d9-ed2fdb680fce",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "iOfaLO027n6wIKcY",
+          "name": "The Curve"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media marketing expert for “The Curve Consultants” — a project planning, construction management, architecture and interior design consultancy based in India since 2007. The firm specializes in project planning, pre-construction strategy, construction management, infrastructure development, residential, commercial, industrial and institutional projects, landscaping, sustainable infrastructure and interior design solutions delivered on time and within budget.\n\nAnalyze the provided image and generate SEO-optimized social media and blog content for The Curve Consultants. The image represents services, sectors or expertise related to construction, infrastructure, planning or consultancy.\n\nFollow these strict rules:\n\nTitle must be SEO-friendly and professional (no emojis)\n\nContent must match The Curve Consultants website positioning\n\nFocus on project planning, construction consulting, infrastructure or design services\n\nTone: professional, engineering, architecture, consultancy\n\nKeywords: project planning, construction management, infrastructure, architecture, consultancy, execution, engineering\n\nDo not mention healthcare or unrelated industries\n\nDescription may include minimal professional emojis if suitable\n\nOptimize for LinkedIn, Facebook, Instagram and WordPress SEO\n\nExcerpt must be concise SEO summary of the post\n\nReturn your response in this EXACT JSON format (no markdown, no code blocks):\n\n{\n\"title\": \"SEO-optimized professional title (max 60 chars, no emojis)\",\n\"description\": \"150-250 char SEO caption about project planning / construction / consultancy with CTA mentioning The Curve Consultants\",\n\"excerpt\": \"Short 120-160 char SEO summary of the post for WordPress excerpt\",\n\"hashtags\": \"#TheCurveConsultants #ProjectManagement #ConstructionConsultants #InfrastructureDevelopment #ArchitecturePlanning #InteriorDesignIndia #EngineeringExcellence\",\n\"alt_text\": \"SEO description of construction or consultancy services shown in image (max 125 chars)\",\n\"caption\": \"Short SEO caption about planning or construction expertise (max 60 chars)\"\n}\n\nthis is title refrence: {{ $('Webhook1').item.json.body.title }}\nthis is title description: {{ $('Webhook1').item.json.body.description }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1680,
+        -352
+      ],
+      "id": "9e64cb40-1f0b-42ab-b13e-0e296d79445a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "image",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2352,
+        -48
+      ],
+      "id": "c6bb2765-c2c4-4471-8108-f84d4976e196",
+      "name": "Webhook1",
+      "webhookId": "e020f35b-b702-4089-984f-cdf0765024b6"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://thecurveconsultants.com/wp-json/wp/v2/media/{{ $('HTTP Request').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ JSON.parse($json.output).title }}-the_curve\",\n  \"description\": \"{{ JSON.parse($json.output).description }} <br> {{ JSON.parse($json.output).hashtags }}\",\n  \"caption\": \"{{ JSON.parse($json.output).caption }}\",\n  \"featured_media\": {{ $('HTTP Request').item.json.id }},\n    \"alt_text\": \"{{ JSON.parse($json.output).alt_text }}\"\n  \n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1328,
+        -352
+      ],
+      "id": "0a7ad3ee-d53f-4a12-8034-aa789adc5012",
+      "name": "Image",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "iOfaLO027n6wIKcY",
+          "name": "The Curve"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.website }}",
+                    "rightValue": "The Curve",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a78d6a2c-f65b-42d2-ab9c-f73883acfdd7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "The Curve"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "26149118-ee57-4f56-a481-35bc146b26ca",
+                    "leftValue": "={{ $json.body.website }}",
+                    "rightValue": "Vaidik",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vaidik"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -2128,
+        -48
+      ],
+      "id": "12c079d3-aef3-466b-a74d-0a54c26fbf70",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "content": "The Curve",
+        "height": 416,
+        "width": 1280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2096,
+        -400
+      ],
+      "id": "723c4d79-b0c0-490a-9d18-54469de83327",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vaidikgreens.com/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": "=attachment; filename=\"vaidik-{{ $now }}.jpg\""
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/jpeg"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1904,
+        160
+      ],
+      "id": "c80bb4cc-8b58-4c9a-9086-7e0e5d061f7b",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "sRZ7CngipZNhiFko",
+          "name": "Vaidik image"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a social media marketing expert for “Vaidik Greens” — a premium luxury resort, farmhouse and wellness lifestyle destination in India. The property offers luxury cottages and farmhouses, gated farmhouse plots, world-class dining, spa and wellness center, swimming pools and water features, pond with boating, clubhouse, entertainment and nightlife spaces, wedding and celebration venues, conference and meeting facilities, family-friendly amenities, nature-centric living and hospitality services.\n\nAnalyze the provided image and generate SEO-optimized social media and blog content for Vaidik Greens. The image represents resort amenities, farmhouse lifestyle, hospitality features, leisure experiences or luxury living environment.\n\nFollow these strict rules:\n\nTitle must be SEO-friendly and professional (no emojis)\n\nContent must match Vaidik Greens website positioning\n\nFocus on luxury resort lifestyle, farmhouse living, hospitality, wellness or leisure amenities\n\nTone: premium, aspirational, lifestyle, hospitality\n\nKeywords: luxury resort, farmhouse living, wellness retreat, gated farmhouse plots, premium lifestyle, nature living, hospitality, leisure destination\n\nDo not mention construction consultancy, healthcare or unrelated industries\n\nDescription may include minimal lifestyle emojis if suitable\n\nOptimize for LinkedIn, Facebook, Instagram and WordPress SEO\n\nExcerpt must be concise SEO summary of the post\n\nReturn your response in this EXACT JSON format (no markdown, no code blocks):\n\n{\n\"title\": \"SEO-optimized premium title (max 60 chars, no emojis)\",\n\"description\": \"150-250 char SEO caption about luxury resort, farmhouse or lifestyle amenities with CTA mentioning Vaidik Greens\",\n\"excerpt\": \"Short 120-160 char SEO summary of the post for WordPress excerpt\",\n\"hashtags\": \"#VaidikGreens #LuxuryResort #FarmhouseLiving #WellnessRetreat #PremiumLifestyle #NatureLiving #LuxuryHospitality\",\n\"alt_text\": \"SEO description of resort, farmhouse or lifestyle amenities shown in image (max 125 chars)\",\n\"caption\": \"Short SEO caption about luxury living or resort lifestyle (max 60 chars)\"\n}\n\nthis is title refrence: {{ $('Webhook1').item.json.body.title }}\nthis is title description: {{ $('Webhook1').item.json.body.description }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1680,
+        160
+      ],
+      "id": "c5cafa1c-1131-4621-8e7f-a8d3d36887fc",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://vaidikgreens.com/wp-json/wp/v2/media/{{ $('HTTP Request1').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ JSON.parse($json.output).title }}\",\n  \"description\": \"{{ JSON.parse($json.output).description }} <br> {{ JSON.parse($json.output).hashtags }}\",\n  \"caption\": \"{{ JSON.parse($json.output).caption }}\",\n  \"featured_media\": {{ $('HTTP Request1').item.json.id }},\n    \"alt_text\": \"{{ JSON.parse($json.output).alt_text }}\"\n  \n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1328,
+        48
+      ],
+      "id": "d6d8bdd4-e3cc-421a-afa2-54c0e0f0e499",
+      "name": "Image1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "sRZ7CngipZNhiFko",
+          "name": "Vaidik image"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Vaidik",
+        "height": 496,
+        "width": 1284,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2096,
+        16
+      ],
+      "id": "ffe550c9-db3b-473b-8fd6-3df18f412760",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b781f6b1-de1d-487b-8e00-7aa25742f49b",
+              "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+              "rightValue": "Facebook",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1328,
+        -144
+      ],
+      "id": "fd4114bf-0c51-4119-8de3-5023fd884f83",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v25.0/174726536381640/photos",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('HTTP Request').item.json.guid.rendered }}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAAK51IthdsABQ9rl4tYXJyJ1r3L0ZCVx651DzQZCZAJuPXwZAZCwBwlgTZCsNPaZCuZCIwz6iYxw3yBLhFK1Ptglr8ZCBLtpZCD5X9VoQUlwgizJVIY9qFs54cQfWmKdFSba87BLeQxlJhguy6cuLX1lfivdIOINh6Fy79DsATU6BHUnTaxse2GIrjO47xGKfQUfQIZCjaPQSk5GloctOPiX2Rr7kUZD"
+            },
+            {
+              "name": "caption",
+              "value": "={{ JSON.parse($json.output).title }}\n{{ JSON.parse($json.output).description }}\n{{ JSON.parse($json.output).hashtags }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eafb541b-9c25-4fa2-a49a-d4689a798c75",
+      "name": "Facebook Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1104,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b781f6b1-de1d-487b-8e00-7aa25742f49b",
+              "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+              "rightValue": "Facebook",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1328,
+        256
+      ],
+      "id": "0f24533f-3624-4c0f-9659-b5512b768d9f",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v25.0/695388076981882/photos",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('HTTP Request1').item.json.guid.rendered }}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAAXXFyvdXZBsBQZCW7p6C6UuYBZByprvEgKtV5ZC1nEhOBYMPz8zXGdB61BVQX4J7MnXPWql3TGZAaDlOSgmcPmFW6Lhkib7UPebvsM2DAMBlZAauF1Ff7ZB2Yt2ZAqfPyRclKHoMak25ky8EhgJtgOXV6ImTZArUW6NcNhYGuVl0ryrxD6U0i0PvUCHesvPavYzRXZB09L6g9UJW3X5E7LW3AbI0o"
+            },
+            {
+              "name": "caption",
+              "value": "={{ JSON.parse($json.output).title }}\n{{ JSON.parse($json.output).description }}\n{{ JSON.parse($json.output).hashtags }}\n\nwww.vaidikgreens.com\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "425c4b04-36e1-4772-a2e8-764370717898",
+      "name": "Facebook Upload1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1104,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mybusiness.googleapis.com/v4/accounts/115640585369855367713/locations/11692384025787498738/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"mediaFormat\": \"PHOTO\",\n  \"locationAssociation\": {\n    \"category\": \"COVER\"\n  },\n  \"sourceUrl\": \"image\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1904,
+        896
+      ],
+      "id": "dd5af705-7f7a-4c9f-9032-8cec3dfafb8d",
+      "name": "Google",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "credentials": {
+        "oAuth2Api": {
+          "id": "U5XXwG7sDvAKNmNn",
+          "name": "Vaidik"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+                    "rightValue": "Instagram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "709e6710-996c-4851-8e86-f7a9d9151387"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Instagram"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6939259c-ff38-46fa-9143-7766194719bc",
+                    "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+                    "rightValue": "Google Business",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Google"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -2352,
+        800
+      ],
+      "id": "cacf877e-869c-4f7e-a6ff-176b0b759f09",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "node": "17841474629310362",
+        "graphApiVersion": "v25.0",
+        "imageUrl": "={{ $('HTTP Request1').item.json.guid.rendered }}",
+        "caption": "vaidik",
+        "additionalFields": {}
+      },
+      "type": "@mookielianhd/n8n-nodes-instagram.instagram",
+      "typeVersion": 1,
+      "position": [
+        -2128,
+        704
+      ],
+      "id": "70de9072-52d9-4a39-a7d3-66fc96acc946",
+      "name": "Publish",
+      "credentials": {
+        "instagramApi": {
+          "id": "q42uMFs7llTHdY1j",
+          "name": "Vaidik"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1616,
+        384
+      ],
+      "id": "5ebf329d-a807-4947-bbc7-54e9d1d50eed",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1IcSG8lyD3TFykdY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b781f6b1-de1d-487b-8e00-7aa25742f49b",
+              "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+              "rightValue": "Instagram",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1856,
+        752
+      ],
+      "id": "280b8967-c4f7-4c54-8f36-34b9f372f393",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b781f6b1-de1d-487b-8e00-7aa25742f49b",
+              "leftValue": "={{ $('Webhook1').item.json.body.platforms }}",
+              "rightValue": "Google Business",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2128,
+        896
+      ],
+      "id": "7d69ada4-0ae3-441f-9752-8cd9ac94a63d",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1616,
+        -128
+      ],
+      "id": "f4efff8d-7d9b-432f-aaf7-6ef7cc23aabd",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1IcSG8lyD3TFykdY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/17841474629310362/media",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={{ $('HTTP Request1').item.json.guid.rendered }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ JSON.parse($json.output).caption }}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAAXXFyvdXZBsBQZCW7p6C6UuYBZByprvEgKtV5ZC1nEhOBYMPz8zXGdB61BVQX4J7MnXPWql3TGZAaDlOSgmcPmFW6Lhkib7UPebvsM2DAMBlZAauF1Ff7ZB2Yt2ZAqfPyRclKHoMak25ky8EhgJtgOXV6ImTZArUW6NcNhYGuVl0ryrxD6U0i0PvUCHesvPavYzRXZB09L6g9UJW3X5E7LW3AbI0o"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "IG Create Media",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1632,
+        752
+      ],
+      "id": "787feb6a-3819-45de-936c-7deaded30256"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/17841474629310362/media_publish",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{$json.id}}"
+            },
+            {
+              "name": "access_token",
+              "value": "EAAXXFyvdXZBsBQZCW7p6C6UuYBZByprvEgKtV5ZC1nEhOBYMPz8zXGdB61BVQX4J7MnXPWql3TGZAaDlOSgmcPmFW6Lhkib7UPebvsM2DAMBlZAauF1Ff7ZB2Yt2ZAqfPyRclKHoMak25ky8EhgJtgOXV6ImTZArUW6NcNhYGuVl0ryrxD6U0i0PvUCHesvPavYzRXZB09L6g9UJW3X5E7LW3AbI0o"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "IG Publish",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1408,
+        752
+      ],
+      "id": "bd2a1a08-c37e-484e-bc36-ca15aebabf7b"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 2,
+      "position": [
+        -2464,
+        208
+      ],
+      "id": "63f614e5-96e8-4dfe-a7ff-cd629b1ab72d",
+      "name": "Upload a file"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Facebook Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image1": {
+      "main": [
+        []
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Facebook Upload1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Publish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Upload1": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "IG Create Media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Google",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Create Media": {
+      "main": [
+        [
+          {
+            "node": "IG Publish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "df7b008a-29a2-4377-9c7e-468061b13e4e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "KY4tgxw5qMfroRxuN3QSI",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}

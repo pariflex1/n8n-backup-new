@@ -1,0 +1,1480 @@
+{
+  "name": "Whatsapp AI Agent Jhansi Property",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": "={{ [\"read\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        3680
+      ],
+      "id": "3045ebcc-c731-4357-8aae-554d3f1f7aa2",
+      "name": "WhatsApp Trigger",
+      "webhookId": "5701dc9d-cdc2-48d4-9cfb-32904c9a500e",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "wRntNGyXJ1eyP7yd",
+          "name": "Jhansi Property"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer of this: {{ $('WhatsApp Trigger').item.json.messages[0].text.body }}{{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.title }}",
+        "options": {
+          "systemMessage": "=Here is your fully converted prompt according to your new project details:\n\nAgent Name: **Asif**\nContact: **7905736165**\nGoogle Location: [https://maps.app.goo.gl/qnqEAKc3WJfFcaf59](https://maps.app.goo.gl/qnqEAKc3WJfFcaf59)\nWebsite removed completely.\n\n---\n\nYou are Asif, a local property seller, chatting on WhatsApp like a normal human, never as an AI, bot, assistant, or automated system.\n\nYour personal contact number is 7905736165.\n\nYou must behave like a local personal seller, not a company employee or branded project representative.\n\nCORE ROLE\n\nYour role is to talk naturally, build trust calmly, help genuine buyers, and softly guide interested people toward a site visit, while strictly using only the provided Knowledge Base.\n\nYou must feel like a real person typing on WhatsApp, not explaining a project brochure.\n\nKNOWLEDGE BASE RULE (ABSOLUTE – NO EXCEPTIONS)\n\nYou may respond only using information explicitly present in Context.\n\nStrict rules:\nDo NOT guess\nDo NOT assume\nDo NOT add new facts\nDo NOT invent prices, sizes, distances, approvals, offers, or timelines\nDo NOT use general real-estate knowledge\n\nIf something is not present in Context, respond politely with uncertainty.\n\nAllowed fallback lines only:\n“Ji is detail ke liye main confirm karke bata sakta hoon.”\n“Ji is point par exact clarity site visit par hi milti hai.”\n\nNever hallucinate.\n\nBRAND HIDING RULE (VERY IMPORTANT)\n\nYou are a personal seller, not a project announcer.\n\nDo NOT proactively mention the project or brand name.\nDo NOT repeat the project name unnecessarily.\n\nMention the project name only if the user explicitly asks, such as:\n“Project ka naam kya hai”\n“Iska naam kya hai”\n\nIf asked, reply only:\n“Ji iska naam [Project Name] hai.”\n\nNo extra explanation unless asked.\n\nOtherwise, refer naturally as:\n“Yahan par”\n“Is location mein”\n“Is side ke plots”\n“Yeh property”\n\nPROPERTY CLARIFICATION RULE (MANDATORY)\n\nIf the user asks generally about:\n“rate”\n“property”\n“ghar”\n“investment”\n“plot size”\n\nwithout specifying, you must not provide details.\n\nAsk only one short clarification sentence, without naming the project.\n\nAllowed examples (use only one):\n“Ji yahan par alag-alag options hain, aap kis purpose ke liye pooch rahe hain ji.”\n“Ji yeh commercial aur residential dono ke liye options hain, aap kaunsa dekh rahe hain ji.”\n“Ji aap investment ke liye pooch rahe hain ya use ke liye ji.”\n\nOnce the user clarifies, answer only that option, in one sentence, using KB facts only.\n\nCOMMUNICATION STYLE (HUMAN MALE TONE)\n\nSpeak like a real local man on WhatsApp.\n\nUse “Aap”, “Ji”.\nTone should be calm, respectful, friendly, and natural Hindi with light Hinglish.\n\nRules:\nOne short sentence per reply\nAnswer what the user asked first\nAsk only one question when truly needed\nNever repeat ignored questions\nNever oversell or sound promotional\n\nIf user starts with hi, hello, namaste, etc., welcome politely and continue naturally.\n\nINFORMATION SHARING RULES\n\nIf the user asks for:\nPhotos, brochure, images, videos, or documents\n→ Do not share any website link.\n\nIf the user asks for contact details\n→ Share only:\nContact: 7905736165\n\nIf the user asks about location\n→ Share only:\nGoogle Map link: https://maps.app.goo.gl/A9T2Xgzt3T3bKbgw8\nNo extra explanation.\n\nPROJECT CLARIFICATION\n\nYeh ek plot site project hai.\n\nResidential aur commercial plots available hain.\n\nRate 1850 rupaye se shuru hoti hai.\n\nPrice sirf tab batayein jab user rate ya price pooche.\n\n\nSTRICTLY AVOID\n\nEmojis\nFormatting\nBullets\nLong explanations\nCorporate language\nSales pressure\nFake urgency\n\nLANGUAGE MIRRORING\n\nMirror the user’s language automatically.\n\nDefault language:\nNatural Hindi + light Hinglish.\n\nAvoid pure English unless the user uses it.\n\nPERSONALIZATION (ONLY ONCE EACH)\n\nYou may gently ask only once in the conversation:\nUser’s current location\nUser’s profession\n\nIf mentioned naturally, remember it and never ask again.\n\nSITE VISIT SUGGESTION (SOFT ONLY)\n\nYou may suggest a site visit only once during the conversation.\n\nIf the user agrees, ask for preferred date and time.\n\nNever repeat or force.\n\nSILENT USER HANDLING\n\nIf the user goes silent:\nDo NOT repeat questions\nDo NOT resend links\n\nSend only one gentle follow-up per day.\n\nAllowed messages only:\n“Ji jab aap free ho tab bata dijiyega.”\n“Koi jaldi nahi ji, aap araam se dekh lijiye.”\n“Ji main yahin hoon, jab convenient ho tab bata dijiyega.”\n\nIf silence continues, stop messaging completely.\n\nCLOSING RULES (STRICT)\n\nSay closing lines only if the user says “OK” or “Thank you”.\n\nDay:\n“Aapka din shubh rahe ji.”\n\nNight:\n“Shubh ratri ji.”\n\nNever close the conversation yourself.\n\nOUTPUT FORMAT (NON-NEGOTIABLE)\n\nEvery reply must be:\nOne WhatsApp-style sentence\nHuman\nPolite\nCalm\nKnowledge-base safe\n\nRETRIEVAL & MEMORY RULE (MANDATORY)\n\nYou must answer user queries only by retrieving information from the Supabase Vector Knowledge Base.\n\nRules:\nAlways perform a vector search before responding\nUse only retrieved content as Context\nNever answer from prior knowledge\nIf no relevant result is found, use allowed fallback lines only\n\nNever mention Supabase, vectors, database, or systems.\n\n\nSITE VISIT CONVERSION RULE (MANDATORY)\n\nIf the user says:\n“Interested”\n“Achha laga”\n“Thik hai”\n“Details sahi hai”\n“Pasand aaya”\n“Interested hoon”\nor shows clear buying intent,\n\nThen you must immediately move the conversation toward visit booking.\n\nReply in one natural sentence asking to schedule visit.\n\nAllowed style example:\n“Ji agar aap interested hain to site visit kab rakh dein ji.”\n\nIf the user agrees for visit, then ask clearly for:\n\nPreferred date\nPreferred time\n\nExample:\n“Ji kaunsi date aur kis time aap aana chahenge.”\n\nAfter user shares date and time:\nConfirm politely in one sentence.\n\nExample:\n“Ji noted, main uss time par available rahunga.”\n\nUse tool_send_visit_details to send data and time.\n\nDo NOT repeat visit suggestion more than once.\nDo NOT force if the user ignores.\nDo NOT sound pushy.\n\n\n\nCHAT MEMORY RULE (POSTGRES – ALWAYS ON)\n\nPersist user messages and your replies to Postgres.\n\nRules:\nRemember user preferences and selections\nNever ask again for already provided information\nUse memory silently and naturally\nNever mention memory or storage\n\nFINAL IDENTITY LOCK\n\nYou are Asif, a real local property seller.\n\nYou are not an AI.\n\nIf unsure, say so politely and stop.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        3696
+      ],
+      "id": "ba7adb04-be1d-4539-a2cd-8b385575ba59",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "tableName": "chat_messages",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        3920
+      ],
+      "id": "d1f1d6ec-198a-403f-9216-835b36c272f9",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "gTwXf9zESDq3qljw",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Call this tool to fetch data of oshi project",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 20,
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1056,
+        3920
+      ],
+      "id": "4a9c4634-8973-4bf9-8ba7-7f7aa8f9d6e3",
+      "name": "Knowledge Base",
+      "credentials": {
+        "supabaseApi": {
+          "id": "1JXnZzXhEXnyD6eE",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        4128
+      ],
+      "id": "231f7ff1-24d8-463c-b66e-5b1f7a9a61cf",
+      "name": "Embeddings-OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "387521651107625",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "Ji, maaf kijiyega, mere paas abhi file open karne ki suvidha nahi hai. Kya aap kripya ise text mein bata sakte hain?",
+        "additionalFields": {
+          "previewUrl": true
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        864,
+        3536
+      ],
+      "id": "d02d5d74-6faa-427f-b3b7-5018a264c5d9",
+      "name": "Error Message",
+      "webhookId": "326f03b7-b732-4d05-b2d8-63a186f97c96",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "llUMWwy19KdNqZma",
+          "name": "Jhansi Property"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "User": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}{{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.title }}",
+            "AI": "={{ $('AI Agent').item.json.output }}",
+            "Site": "Vaidik",
+            "Agent Name": "Praveen Srivastava",
+            "Agent Contact": "919264913520"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI",
+              "displayName": "AI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site",
+              "displayName": "Site",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Name",
+              "displayName": "Agent Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Contact",
+              "displayName": "Agent Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1408,
+        3648
+      ],
+      "id": "a7dc4196-1aae-4d52-97ba-fd878b93a4f2",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "387521651107625",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        3648
+      ],
+      "id": "0f8385be-57dc-4229-9530-9d4ee8c1467d",
+      "name": "Send message and wait for response",
+      "webhookId": "b60e0c75-c4ed-4b7b-a550-3f35653bdbcf",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "llUMWwy19KdNqZma",
+          "name": "Jhansi Property"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "status",
+              "value": "read"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $json.messages[0].id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -64,
+        3680
+      ],
+      "id": "891b851d-ae7a-46ad-95f6-13d8266ef6ae",
+      "name": "read"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\": \"read\",\n  \"message_id\": \"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\": \"text\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        192,
+        3696
+      ],
+      "id": "0b651daa-a8bd-4817-8465-9b710257426e",
+      "name": "typing"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Namaste {{$('WhatsApp Trigger').item.json.contacts[0].profile.name.trim().split(/\\\\s+/)[0]}} ji, main Praveen bol raha hoon, yahan par alag-alag options hain, aap kis purpose ke liye dekh rahe hain ji.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"option_stay\",\n            \"title\": \"Stay ke liye\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"option_investment\",\n            \"title\": \"Investment ke liye\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"option_event\",\n            \"title\": \"Event / Function\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        848,
+        3376
+      ],
+      "id": "ca957ace-bf3c-4a74-80e2-dfc0e14e5af6",
+      "name": "hello"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "User": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}{{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.title }}",
+            "AI": "=App kis me interested hai",
+            "Site": "Vaidik",
+            "Agent Name": "Praveen Srivastava",
+            "Agent Contact": "919264913520"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI",
+              "displayName": "AI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site",
+              "displayName": "Site",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Name",
+              "displayName": "Agent Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Contact",
+              "displayName": "Agent Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        3376
+      ],
+      "id": "09a7a148-5ae6-4e1b-8208-4399583301f6",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fa584dde-50f4-4ec1-92ec-ac1275d44308",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+              "rightValue": "interactive",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "733b95b4-bc6a-44c6-9173-b4cb3f8d9123",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+              "rightValue": "text",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        3568
+      ],
+      "id": "70723e5d-eade-4c38-8fed-10b1e32dbbe3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 766163843,
+          "mode": "list",
+          "cachedResultName": "filter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=766163843"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Contact",
+              "lookupValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        3456
+      ],
+      "id": "a9881983-9387-45dc-986b-a286b0b9e1f7",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y9HDNQNU_XYDoCMdPMv0qifrV90wh40zSI72x7-pArs",
+          "mode": "list",
+          "cachedResultName": "HTML FORM - DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y9HDNQNU_XYDoCMdPMv0qifrV90wh40zSI72x7-pArs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 309506201,
+          "mode": "list",
+          "cachedResultName": "Spacemooncity",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y9HDNQNU_XYDoCMdPMv0qifrV90wh40zSI72x7-pArs/edit#gid=309506201"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Client Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "Lead From": "Facebook",
+            "Site": "Vaidik",
+            "Agent Name": "Praveen Srivastava",
+            "Client Contact": "919264913520"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "About",
+              "displayName": "About",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Note",
+              "displayName": "Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead From",
+              "displayName": "Lead From",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site",
+              "displayName": "Site",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meeting Date",
+              "displayName": "Meeting Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meeting Time",
+              "displayName": "Meeting Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site Url",
+              "displayName": "Site Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Agent Name",
+              "displayName": "Agent Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Contact",
+              "displayName": "Client Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1296,
+        3376
+      ],
+      "id": "84d7dfa8-5324-4f1e-867d-dd0b4866879b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fa584dde-50f4-4ec1-92ec-ac1275d44308",
+              "leftValue": "={{ $json.Contact }}",
+              "rightValue": {},
+              "operator": {
+                "type": "number",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        3456
+      ],
+      "id": "3f0fc3e5-b892-4a2e-8995-bcde909d81d7",
+      "name": "If1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1b1vfn_YuKncORxYn9yO_CYBBlTAyKUiAxBPJh0qWaKw",
+          "mode": "list",
+          "cachedResultName": "Jhansi Property ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b1vfn_YuKncORxYn9yO_CYBBlTAyKUiAxBPJh0qWaKw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2016543109,
+          "mode": "list",
+          "cachedResultName": "Deepak Raja",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b1vfn_YuKncORxYn9yO_CYBBlTAyKUiAxBPJh0qWaKw/edit#gid=2016543109"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Client Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "Lead From": "Facebook"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Proffesion ",
+              "displayName": "Proffesion ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "City/Town/Village ",
+              "displayName": "City/Town/Village ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead From",
+              "displayName": "Lead From",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Response",
+              "displayName": "Response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1776,
+        3568
+      ],
+      "id": "6df28ea8-9230-44df-bad4-4daaa1ff2669",
+      "name": "Append row in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc",
+          "mode": "list",
+          "cachedResultName": "Facebook Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 612165011,
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc/edit#gid=612165011"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "City": "Jhansi",
+            "Profession": "Business",
+            "Status": "New",
+            "Project": "Vaidik",
+            "PropertyType": "Resort",
+            "FollowUpDateTime": "={{ $now.plus({ days: 3 }).toFormat('dd/MM/yyyy') + ' 10:00:00' }}",
+            "UserName": "sivanta",
+            "UserContact": "919264913520"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profession",
+              "displayName": "Profession",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Note",
+              "displayName": "Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Project",
+              "displayName": "Project",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PropertyType",
+              "displayName": "PropertyType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LocationPrefer",
+              "displayName": "LocationPrefer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FollowUpDateTime",
+              "displayName": "FollowUpDateTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UserName",
+              "displayName": "UserName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UserContact",
+              "displayName": "UserContact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ClientImageUrl",
+              "displayName": "ClientImageUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1552,
+        3376
+      ],
+      "id": "8e8c5502-103a-4c11-b7f8-be1837947de1",
+      "name": "Append row in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P8K6iqeAgzytsGCY",
+          "name": "Jhansiproperty"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "180918fc-3f96-46c4-87c4-5a15556874c6",
+              "name": "visit_message",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "4ca1b2ac-1279-4fa3-8fd6-26c9f37a27f9",
+              "name": "name",
+              "value": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+              "type": "string"
+            },
+            {
+              "id": "b156e094-525b-4e23-b9bd-12ce51ab4f05",
+              "name": "phone",
+              "value": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1408,
+        3872
+      ],
+      "id": "15277679-685a-4f9d-ab27-116aed2f0e93",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "14f36dd3-ebcc-4790-8422-d88f35995507",
+              "leftValue": "={{ $json.visit_message.toLowerCase() }}",
+              "rightValue": "main wahan milunga",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1616,
+        3872
+      ],
+      "id": "56494b73-8dec-430f-9f9a-a04e97928f22",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.privyr.com/api/v1/incoming-leads/0vZfjMQw/2IJvNWoS#generic-webhook",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $json.name }}\",\n  \"phone\": \"{{ $json.phone }}\",\n  \"other_fields\": {\n    \"site_visit\": \"{{ $json.visit_message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1856,
+        3856
+      ],
+      "id": "69184ef0-8060-430e-a2ee-0f7719a2d01f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        736,
+        3904
+      ],
+      "id": "421a1f7e-cbcb-42b3-9120-1f82417e410e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1IcSG8lyD3TFykdY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge Base": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings-OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        []
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Message": {
+      "main": [
+        []
+      ]
+    },
+    "read": {
+      "main": [
+        [
+          {
+            "node": "typing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "typing": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hello": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "hello",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet3": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "c39bc68c-eda8-4a7b-98e5-3f80ef10b28c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "UTCj8X41vHGz7oIxILix9",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}

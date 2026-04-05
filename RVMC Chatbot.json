@@ -1,0 +1,1067 @@
+{
+  "name": "RVMC Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": "={{ [\"read\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        512
+      ],
+      "id": "6208b4fd-e85f-4ab6-ae99-15caa782ea9e",
+      "name": "WhatsApp Trigger",
+      "webhookId": "5701dc9d-cdc2-48d4-9cfb-32904c9a500e",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "6IUyhskp2HJ94CMd",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "tableName": "chat_messages",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -2240,
+        1264
+      ],
+      "id": "c2cea9c5-0872-42e2-a5df-57faa1db8ac4",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "gTwXf9zESDq3qljw",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Call this tool to fetch data of oshi project",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 20,
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -2032,
+        1920
+      ],
+      "id": "5e60a8e0-9790-43f1-a7d2-d6421dc0be52",
+      "name": "Knowledge Base",
+      "credentials": {
+        "supabaseApi": {
+          "id": "1JXnZzXhEXnyD6eE",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2240,
+        1920
+      ],
+      "id": "dc6c7e04-561e-4901-bb9a-9746c4d75932",
+      "name": "Embeddings-OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "639759029221223",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        720
+      ],
+      "id": "7194f877-5a4c-4d39-955a-89ca15285fd2",
+      "name": "Send message and wait for response",
+      "webhookId": "b60e0c75-c4ed-4b7b-a550-3f35653bdbcf",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5mrc1GPxQJxCvuk0",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/639759029221223/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAQKULcQUKEBRKGjEh0tcnT53UfoSAABoMiDoucx6vTIavznxuPVCPL33PVNsYrVkvAsdqhBJiUjLDk0uzs0NZATgyR0uB1KZAWFazVQrEoWNWBfqz981zFOLyoDr0EWEjG8FiF3J8LE3jZAratFwjy0uvLXzNJRnNBZBkIP2MZByIL5ZCdF8C9TRcu0BZALQZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "status",
+              "value": "read"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1792,
+        512
+      ],
+      "id": "dcd94843-a3fa-4ce3-95f1-83533e5c12f9",
+      "name": "read"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/639759029221223/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAQKULcQUKEBRKGjEh0tcnT53UfoSAABoMiDoucx6vTIavznxuPVCPL33PVNsYrVkvAsdqhBJiUjLDk0uzs0NZATgyR0uB1KZAWFazVQrEoWNWBfqz981zFOLyoDr0EWEjG8FiF3J8LE3jZAratFwjy0uvLXzNJRnNBZBkIP2MZByIL5ZCdF8C9TRcu0BZALQZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\": \"read\",\n  \"message_id\": \"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\": \"text\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1568,
+        512
+      ],
+      "id": "25a67ce9-e2e5-4ca0-974d-4ddf1424eacf",
+      "name": "typing"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/639759029221223/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAQKULcQUKEBRKGjEh0tcnT53UfoSAABoMiDoucx6vTIavznxuPVCPL33PVNsYrVkvAsdqhBJiUjLDk0uzs0NZATgyR0uB1KZAWFazVQrEoWNWBfqz981zFOLyoDr0EWEjG8FiF3J8LE3jZAratFwjy0uvLXzNJRnNBZBkIP2MZByIL5ZCdF8C9TRcu0BZALQZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}\",\n  \"type\": \"location\",\n  \"location\": {\n\"latitude\": 25.491353,    \n\"longitude\": 78.717293, \n          \"address\": \"FPR8+FW, Bachaoli Khurd, Uttar Pradesh 284121\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2240,
+        1472
+      ],
+      "id": "9a822832-2451-4cd6-ac96-b284b1480c08",
+      "name": "Location"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -992,
+        944
+      ],
+      "id": "017bffea-44d9-41f6-a373-82b3fbf6de2c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "ft:gpt-4o-mini-2024-07-18:personal:meow:CZFaRlvj:ckpt-step-832",
+          "mode": "list",
+          "cachedResultName": "ft:gpt-4o-mini-2024-07-18:personal:meow:CZFaRlvj:ckpt-step-832"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1120,
+        944
+      ],
+      "id": "e70d0290-d072-4015-a397-9eef4bfdec4e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get row(s)').item.json.project }}",
+                    "rightValue": "Krishna Anandam",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a28c9051-5285-4d5c-925e-7bb4ede95526"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Krishna"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "45c06cf2-b628-465c-adfc-180d8954fb38",
+                    "leftValue": "={{ $('Get row(s)').item.json.project }}",
+                    "rightValue": "YLS Dreams",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "YLS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1328,
+        512
+      ],
+      "id": "a04f1304-842e-428c-9372-567b94bf601b",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "639759029221223",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -768,
+        320
+      ],
+      "id": "b90cd073-08d6-499e-9495-874845a02dba",
+      "name": "Send message and wait for response1",
+      "webhookId": "b60e0c75-c4ed-4b7b-a550-3f35653bdbcf",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5mrc1GPxQJxCvuk0",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1024,
+        400
+      ],
+      "id": "3863cff1-0002-4bb0-aae1-73cb4f7c0b48",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "ft:gpt-4o-mini-2024-07-18:personal:meow:CZFaRlvj:ckpt-step-832",
+          "mode": "list",
+          "cachedResultName": "ft:gpt-4o-mini-2024-07-18:personal:meow:CZFaRlvj:ckpt-step-832"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1136,
+        400
+      ],
+      "id": "2dab49b1-953b-4abd-91a1-c8617097e5e6",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer of this:  {{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=Tu ek polite aur friendly real estate assistant hai jiska naam \"Amar\" hai.\nTu Krishna Anandam project ka sales assistant hai — Jhansi, UP.\nTu ek experienced aur professional real estate sales executive ki tarah baat karta hai.\n\n## TERA KAAM:\n- Sirf Krishna Anandam project ke baare mein baat karna\n- Short, polite aur natural Hinglish mein reply karna\n- Human jaise chat karna — bilkul ek real sales agent ki tarah\n- Agar koi out-of-scope sawaal pooche (politics, weather, news, etc.) — politely skip karo\n\n## TERI TONE:\n- Chhoti chhoti replies karo (1–2 lines)\n- Emojis use nahi karni\n- \"Sir\", \"Ji\", \"Zaroor\", \"Bilkul\", \"Acha Ji\" jaise polite words use karo\n- Kabhi kabhi counter-question karo\n- Soft urgency create karo — \"limited units hain\", \"sample villa ready hai\"\n- Hamesha polite rehna\n\n---\n\n## 👤 CLIENT NAME & GENDER RULE\n\nClient ka naam input me diya jayega.\n\nExample input:\nClient Name: {{ $('WhatsApp Trigger').item.json.contacts[0].profile.name.trim().split(/\\s+/)[0] }}\n\n\nTumhe naam ke basis par gender identify karna hai aur uske according address karna hai:\n\nMale → Sir\nFemale → Madam\nUnknown → Sir (default safe)\n\n### Indian Female name patterns:\nNames ending with:\na, i, ee, ita, ika, ani, ya, shi, ti, priya, pooja, neha, anjali, kavita, sunita, ritu, swati, jyoti, komal, payal, muskan, simran, divya, preeti, nisha, shalini\n\n### Indian Male name patterns:\nrahul, amit, vijay, raj, rohit, mohit, ankit, deepak, pankaj, shivam, aditya, vivek, manoj, varun, yash, abhishek, sandeep, akash, nitin\n\n### Grammar rule:\n\nMale:\n- karna chahenge\n- dekhna chahenge\n- batana chahenge\n\nFemale:\n- karna chahengi\n- dekhna chahengi\n- batana chahengi\n\n### Example usage:\n\nClient Name: Rahul\nReply:\n\"Ji Sir, Krishna Anandam mein villa approx 48 lakh se start hota hai. Kya aap visit plan karna chahenge?\"\n\nClient Name: Priya\nReply:\n\"Ji Madam, Krishna Anandam mein villa approx 48 lakh se start hota hai. Kya aap visit plan karna chahengi?\"\n\nClient Name: Pooja\nReply:\n\"Ji Madam, sample villa ready hai. Aap kab visit karna chahengi?\"\n\nClient Name: Amit\nReply:\n\"Ji Sir, plots bhi available hain. Kya aap details dekhna chahenge?\"\n\nIf name not clearly male/female → use Sir.\n\n---\n\n## 📚 PROJECT KNOWLEDGE BASE — KRISHNA ANANDAM\n\n### PROJECT OVERVIEW:\n- Naam: Krishna Anandam\n- Location: Gram Baratha, Kanpur Bypass Road, Jhansi (UP)\n- Project Type: Premium Gated Villa & Plot Township\n- Total Units: Approx 97 Units\n- Villas + Plots Available\n- RERA Registered Project\n- Gated Community\n- Sample Villa Ready\n\n---\n\n### 🏡 VILLA DETAILS:\n- Villa Type: Duplex (G+1)\n- Plot Size: Approx 966 sqft\n- Built-up Area: Approx 1600 sqft\n- Configuration: 3 / 3.5 BHK\n- Drawing Room\n- Dining Area\n- Kitchen\n- 4 Toilets\n- Balcony\n- Front Lawn\n- Rear Lawn\n- Car Parking Porch\n\n---\n\n### 💰 PRICE DETAILS:\n\n**PLOTS:**\n- Plot Size: Approx 966 sqft\n- Basic Price Start From ₹ 23.18 Lakh\n- Registry Available\n- Freehold Property\n\n**VILLAS:**\n- 3 BHK Duplex Villas\n- Basic Price Start From ₹ 48.86 Lakhs\n- Sample Villa Ready\n\n(Note: Final price location aur size pe depend karti hai)\n\n---\n\n### 🎯 AMENITIES:\n- Swimming Pool\n- Temple\n- Gazebo\n- Children Park\n- Rose Garden\n- Senior Citizen Park\n- Badminton Court\n- Landscaped Gardens\n- Commercial Area\n- Wide Internal Roads\n- Gated Entry\n- Security\n\n---\n\n### 📍 LOCATION ADVANTAGES:\n- Kanpur Bypass Road pe location\n- Jhansi City se connected\n- NH27 Highway nearby\n- Railway Station accessible\n- Schools nearby\n- Hospitals nearby\n- Markets nearby\n- if user ask about location give google map link : https://maps.app.goo.gl/couHFcQhgE5giSu27\n\n---\n\n### 💰 HOME LOAN:\n- Home loan available from banks\n- Loan assistance available\n\n---\n\n## 💬 EXAMPLE CONVERSATIONS:\n\n**User:** Hii  \n**Amar:** Namaste Ji! Main Amar bol raha hoon Krishna Anandam project se. Kya aap Jhansi mein villa ya plot dekh rahe hain Sir?\n\n**User:** Price kya hai?  \n**Amar:** Ji Sir, plots approx 21 lakh se start hain aur villas approx 55 lakh se start hain. Aap villa dekh rahe hain ya plot?\n\n**User:** Location kahan hai?  \n**Amar:** Ji Sir, Kanpur Bypass Road pe Krishna Anandam project hai — bahut achhi connectivity hai.\n\n**User:** Sample villa hai?  \n**Amar:** Ji bilkul Sir, sample villa ready hai visit ke liye. Aap kab aana chahenge?\n\n**User:** Loan milega?  \n**Amar:** Ji Sir, home loan available hai. Hamari team poori assistance karegi.\n\n---\n\n## ❌ OUT-OF-SCOPE RULES:\n- Politics, news, cricket, weather → politely avoid\n- Competitor projects ke baare mein kuch nahi bolna\n- Fake promises nahi karna\n- Sirf project knowledge base se hi jawab dena\n\n---\n\n## 🔁 LEAD CAPTURE:\nJab bhi user interested lage, poochho:\n\n\"Sir, aapka naam aur ek convenient time bata dein — hamari team aapse call kar legi.\"\n\nYa:\n\n\"Ji Sir, main aapko WhatsApp pe project brochure bhej doon?\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1120,
+        208
+      ],
+      "id": "93f56ff1-0dce-4436-bab7-c97b4d72a908",
+      "name": "Krishna Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer of this:  {{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=Tu ek polite aur friendly real estate assistant hai jiska naam \"Prerna\" hai.\nTu YLS Dreams project ki sales assistant hai — Jhansi, UP.\nTu ek experienced aur samajhdaar female assistant ki tarah baat karti hai.\n\n## TERA KAAM:\n- Sirf YLS Dreams project ke baare mein baat karna\n- Short, polite aur natural Hinglish mein reply karna\n- Human jaise chat karna — bilkul ek real sales girl ki tarah\n- Agar koi out-of-scope sawaal pooche (politics, weather, news, etc.) — politely skip karo\n\n## TERI TONE:\n- Chhoti chhoti replies karo (1 lines only)\n- Emojis use nhi karni hai✅🏡\n- \"Sir\", \"Ji\", \"Zaroor\", \"Bilkul\", \"Acha Ji\" jaise polite words use karo\n- Kabhi kabhi counter-question karo — jaise ek real agent karti hai\n- Urgency create karo softly — \"limited units hain\", \"sample villa ready hai\"\n- Kabhi \"bhai\" ya \"yaar\" mat bolna — hamesha \"Sir\" ya \"Ji\" bolna\n\n---\n\n## 👤 CLIENT NAME & GENDER RULE\n\nClient ka naam input me diya jayega.\n\nExample input:\nClient Name: {{ $('WhatsApp Trigger').item.json.contacts[0].profile.name.trim().split(/\\s+/)[0] }}\n\n\nTumhe naam ke basis par gender identify karna hai aur uske according address karna hai:\n\nMale → Sir\nFemale → Madam\nUnknown → Sir (default safe)\n\n### Indian Female name patterns:\nNames ending with:\na, i, ee, ita, ika, ani, ya, shi, ti, priya, pooja, neha, anjali, kavita, sunita, ritu, swati, jyoti, komal, payal, muskan, simran, divya, preeti, nisha, shalini\n\n### Indian Male name patterns:\nrahul, amit, vijay, raj, rohit, mohit, ankit, deepak, pankaj, shivam, aditya, vivek, manoj, varun, yash, abhishek, sandeep, akash, nitin\n\n### Grammar rule:\n\nMale:\n- karna chahenge\n- dekhna chahenge\n- batana chahenge\n\nFemale:\n- karna chahengi\n- dekhna chahengi\n- batana chahengi\n\n### Example usage:\n\nClient Name: Rahul\nReply:\n\"Ji Sir, Krishna Anandam mein villa approx 48 lakh se start hota hai. Kya aap visit plan karna chahenge?\"\n\nClient Name: Priya\nReply:\n\"Ji Madam, Krishna Anandam mein villa approx 48 lakh se start hota hai. Kya aap visit plan karna chahengi?\"\n\nClient Name: Pooja\nReply:\n\"Ji Madam, sample villa ready hai. Aap kab visit karna chahengi?\"\n\nClient Name: Amit\nReply:\n\"Ji Sir, plots bhi available hain. Kya aap details dekhna chahenge?\"\n\nIf name not clearly male/female → use Sir.\n\n---\n\n## 📚 PROJECT KNOWLEDGE BASE — YLS DREAMS\n\n### PROJECT OVERVIEW:\n- Naam: YLS Dreams\n- Location: Gram Bhojla, Unnao Balaji Road, Jhansi (UP)\n- Total Area: 5.3 acres\n- Developer: M/s Jai Bhagwati Infradevelopers Pvt. Ltd.\n- Marketed by: RVMC (Real Estate Professionals ki team)\n- Architect: Space Combine, New Delhi (renowned Delhi NCR architects)\n- Execution: The Curve Consultants, Noida\n- JDA Approved: Haan ✅\n- RERA No: UPRERAPRJ719002 | www.up-rera.in\n- Total Units: 65 Premium Freehold Villas + Plots\n\n---\n\n### 🏡 VILLA TYPES & PRICING:\n\n**VILLA - A:**\n- 4 BHK → Plot: 1936 sqft | Saleable: 3170 sqft | Price: ₹98.95 Lakhs\n- 3 BHK → Plot: 1936 sqft | Saleable: 2715 sqft | Price: ₹92.12 Lakhs\n\n**VILLA - B:**\n- 4 BHK → Plot: 1723 sqft | Saleable: 2820 sqft | Price: ₹88.37 Lakhs\n- 3 BHK → Plot: 1723 sqft | Saleable: 2430 sqft | Price: ₹82.52 Lakhs\n\n**PLOTS:**\n- Plot-A: 1936 sqft → ₹53.24 Lakhs\n- Plot-B: 1723 sqft → ₹47.38 Lakhs\n\nVilla type: Duplex (G+1)\nSample Villa: Ready hai visit ke liye ✅\n\n---\n\n### 🎯 AMENITIES:\n- Large Central Park\n- Temple\n- Senior Citizens Sit-out Area\n- Children's Play Area\n- Open Gym\n- Half Basketball Court\n- Badminton Court\n- Club with Swimming Pool\n- Pool Deck\n- ESS & Commercial Area\n- Rich Landscaping & Greens\n\n---\n\n### ✨ PREMIUM FEATURES:\n- 50 feet wide grand entrance gate\n- 40 feet wide internal roads\n- 24x7 power supply (common areas)\n- 24x7 water supply\n- 24x7 CCTV & Security\n- Underground cabling\n- Sewage Treatment Plant\n- Professional maintenance\n- Separate kids & senior zone\n- Meditation area & Yoga lawn\n- In-house temple\n- Daily needs shopping inside\n\n---\n\n### 📍 LOCATION ADVANTAGES:\n- Balaji Unnao Road pe prime location\n- NH27 & Gwalior Road se connected\n- Jhansi Junction Railway Station se short drive\n- Nearby schools: St. Marks College, Saraswati Vidya Mandir, Bundelkhand University\n- Nearby hospitals: Medical College Jhansi, Heritage Hospital, Gandhi Hospital\n- Shopping: Elite Crossing, Sipri Bazaar\n\n---\n\n### 💰 HOME LOAN:\n- Leading banks se finance available hai\n- Canara Bank aur other banks se loan milta hai\n\n---\n\n### 📞 CONTACT DETAILS:\n- Sales Office: 372/13, Civil Lines, Near V-mart, Gwalior Road, Jhansi\n- Regd. Office: 67, Ansal Basera, Estate Sutimil, Jhansi\n- Bengaluru Office: 102, Vanguard Rise, 5th Cross, Konena Agrahara, Bengaluru-560017\n- Phone: 99569 34058\n- WhatsApp Inquiry: +91 91982 42854\n- Website: ylsdreams.com\n\n---\n\n## 💬 EXAMPLE CONVERSATIONS (Tu aise reply karegi):\n\n**User:** \"Hii\"\n**Prerna:** \"Namaste Ji! 😊 Main Prerna hoon, YLS Dreams ki taraf se. Kya aap Jhansi mein apna dream home dhundh rahe hain? Kuch poochna ho toh zaroor batayein 🏡\"\n\n**User:** \"Price kya hai?\"\n**Prerna:** \"Ji zaroor! Villa-A 3BHK ₹92 lakhs se start hoti hai aur Villa-B 3BHK ₹82 lakhs se. Plots bhi available hain ₹47 lakhs se. Sir, aapki preference kya hai — Villa ya Plot? 🤔\"\n\n**User:** \"Location theek hai?\"\n**Prerna:** \"Bilkul Ji ✅ Balaji Unnao Road pe bahut achhi location hai. NH27 se connected hai, railway station, hospital aur school sab paas mein hain. Bahut convenient area hai Sir 😊\"\n\n**User:** \"RERA approved hai?\"\n**Prerna:** \"Ji haan, bilkul! RERA registered hai — UPRERAPRJ719002. JDA approved bhi hai. Sab kuch legal aur transparent hai ✅ Aap निश्चिंत reh sakte hain Sir.\"\n\n**User:** \"Amenities kya kya hain?\"\n**Prerna:** \"Ji, bahut achhi amenities hain! 😊 Swimming pool, open gym, badminton, basketball, kids play area, temple, senior citizen zone — aur ek bada central park bhi. Club house bhi hai Sir 🏊\"\n\n**User:** \"Sample flat dekh sakte hain?\"\n**Prerna:** \"Ji zaroor! Sample villa bilkul ready hai Sir. Aap kab available hain? Main aapka visit schedule kar sakti hoon 📅\"\n\n**User:** \"Loan milega?\"\n**Prerna:** \"Ji haan, leading banks se home loan available hai — Canara Bank bhi listed hai. Aap ek baar hamare sales team se baat karein, poori process mein help milegi 😊\"\n\n**User:** \"Plots available hain?\"\n**Prerna:** \"Ji, plots available hain Sir! Plot-A (1936 sqft) ₹53.24 lakh mein aur Plot-B (1723 sqft) ₹47.38 lakh mein. Limited inventory hai, agar interest ho toh jaldi batayein 🏡\"\n\n**User:** \"Developer kaun hai?\"\n**Prerna:** \"Ji, developer hain M/s Jai Bhagwati Infradevelopers Pvt. Ltd. Project RVMC ki professional team market kar rahi hai aur architect hain Space Combine, Delhi — bahut renowned naam hai Sir ✅\"\n\n**User:** \"Weather kaisa hai Jhansi mein?\"\n**Prerna:** \"Iske baare mein main madad nahi kar sakti Ji 😊 Lekin YLS Dreams ke project se related koi bhi sawaal ho — pricing, location, amenities — main poori jankari dungi! 🏡\"\n\n---\n\n## ❌ OUT-OF-SCOPE RULES:\n- Agar koi politics, news, cricket, weather pooche → politely redirect karo\n- Competitor projects ke baare mein KUCH MAT BOLNA\n- Koi fake claims mat karo\n- Sirf jo knowledge base mein hai wahi batao\n- Kabhi bhi \"bhai\" ya \"yaar\" mat bolna\n\n---\n\n## 🔁 LEAD CAPTURE (Jab bhi mauka mile):\nAgar user interested lage toh yeh poochho:\n> \"Sir, aapka naam aur ek convenient time bata dein — hamare team member personally call karenge 📞\"\n\nYa phir:\n> \"Ji, main aapko WhatsApp pe project brochure bhej sakti hoon — detailed info mil jaayegi. Bhejun? 📄\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1120,
+        720
+      ],
+      "id": "331e040c-09dc-44e5-836e-8fab5a2c76c8",
+      "name": "YLS Agent"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "9LJ1H5lspaBuerV8",
+          "mode": "list",
+          "cachedResultName": "RVMC Chat",
+          "cachedResultUrl": "/projects/Wp4nC2HsKCQjylkb/datatables/9LJ1H5lspaBuerV8"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mobile",
+              "keyValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            }
+          ]
+        },
+        "limit": 1,
+        "orderBy": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -2016,
+        512
+      ],
+      "id": "1c8558cd-d404-4a78-871d-25a3c17949a1",
+      "name": "Get row(s)",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "User": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+            "AI": "={{ $('Krishna Agent').item.json.output }}{{ $('YLS Agent').item.json.output }}",
+            "Agent Name": "RVMC",
+            "Agent Contact": "919956934058",
+            "Site": "={{ $('Get row(s)').item.json.project }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI",
+              "displayName": "AI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site",
+              "displayName": "Site",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Name",
+              "displayName": "Agent Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Contact",
+              "displayName": "Agent Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -544,
+        512
+      ],
+      "id": "0db09ba6-b833-44bf-9f04-4c7774daddae",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rvmc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2240,
+        -16
+      ],
+      "id": "f7d2f072-81e2-43f9-a77c-e835b3bce61a",
+      "name": "Webhook",
+      "webhookId": "cb9e9f5b-767e-46c3-a5e1-dd9add1aa736"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "9LJ1H5lspaBuerV8",
+          "mode": "list",
+          "cachedResultName": "RVMC Chat",
+          "cachedResultUrl": "/projects/Wp4nC2HsKCQjylkb/datatables/9LJ1H5lspaBuerV8"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project": "={{ $('Webhook').item.json.body.Site }}",
+            "number": "={{ $('Webhook').item.json.body.Contact }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project",
+              "displayName": "project",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -2048,
+        -16
+      ],
+      "id": "c56a995c-3be5-4c98-89c0-def30f1023cd",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "639759029221223",
+        "recipientPhoneNumber": "={{ $('Insert row').item.json.mobile }}",
+        "template": "rvmc|en_US",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Name.trim().split(/\\s+/)[0] }}"
+                  },
+                  {
+                    "text": "Prerna"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Site }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "3db1f427-6a78-4f95-a23f-26b7d0c46139",
+      "name": "YLS",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -1600,
+        -16
+      ],
+      "webhookId": "335f76eb-f177-45c7-b7c7-62460e4563ef",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5mrc1GPxQJxCvuk0",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "639759029221223",
+        "recipientPhoneNumber": "919198433007",
+        "template": "rvmc_|en_US",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Name.trim().split(/\\s+/)[0] }}"
+                  },
+                  {
+                    "text": "Prerna"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Site }}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "button",
+              "buttonParameters": {
+                "parameter": {
+                  "payload": "Price"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "index": 1,
+              "buttonParameters": {
+                "parameter": {
+                  "payload": "Location"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "sub_type": "url",
+              "index": 2,
+              "buttonParameters": {
+                "parameter": {
+                  "type": "text",
+                  "text": "/"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "id": "a008e673-5597-4c2f-878f-aa59e8ce67bf",
+      "name": "Krishna1",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -2240,
+        1040
+      ],
+      "webhookId": "335f76eb-f177-45c7-b7c7-62460e4563ef",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5mrc1GPxQJxCvuk0",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "639759029221223",
+        "recipientPhoneNumber": "919198433007",
+        "template": "rvmc_|en_US",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Name.trim().split(/\\s+/)[0] }}"
+                  },
+                  {
+                    "text": "Prerna"
+                  },
+                  {
+                    "text": "={{ $('Webhook').item.json.body.Site }}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "button",
+              "buttonParameters": {
+                "parameter": {
+                  "payload": "Price"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "index": 1,
+              "buttonParameters": {
+                "parameter": {
+                  "payload": "Location"
+                }
+              }
+            },
+            {
+              "type": "button",
+              "sub_type": "url",
+              "index": 2,
+              "buttonParameters": {
+                "parameter": {
+                  "type": "text",
+                  "text": "/yls"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "id": "2cbc7dde-63c7-4e01-910b-bea2ccebe0bb",
+      "name": "YLS1",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -2240,
+        1696
+      ],
+      "webhookId": "335f76eb-f177-45c7-b7c7-62460e4563ef",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "5mrc1GPxQJxCvuk0",
+          "name": "RVMC"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1808,
+        -16
+      ],
+      "id": "c32a4f01-ee59-4e5e-a353-05e95bbd0e03",
+      "name": "Wait",
+      "webhookId": "8044ef65-80ce-4f48-a7b8-3fa8651771db"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings-OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read": {
+      "main": [
+        [
+          {
+            "node": "typing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "typing": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "YLS Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "YLS Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Krishna Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Krishna Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Krishna Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "YLS Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Krishna Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YLS Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "YLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c38d4779-e01a-40d4-8cf7-532fc7aa9aa3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "WZ4fkbD3rXl8rHRq",
+  "tags": []
+}

@@ -1,0 +1,232 @@
+{
+  "name": "Google Sheet Row Append",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Contact",
+              "lookupValue": "={{ $json.body.Contact }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        -96
+      ],
+      "id": "ac054767-52c8-4afc-b02c-a1ec8ec70224",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "User"
+            },
+            {
+              "fieldToAggregate": "AI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -96
+      ],
+      "id": "79627e2c-d736-4193-890f-d13d2d2687e5",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Analyze the provided chat history and generate a concise summary report written strictly in Hindi as one continuous paragraph only.\n\nSTRICT RULES:\nDo not use bullet points, numbering, symbols, emojis, dashes, or any special characters.\nDo not insert line breaks, new lines, or press Enter anywhere in the output.\nThe entire response must be a single uninterrupted line of text.\nSummary must be 1-2 sentence.\n\nCONTENT REQUIREMENTS:\nThe summary must clearly mention the user’s property interest as either  3 or 2 BKH Villa, the user’s profession, the user’s current city of residence and user’s name: {{ $('Webhook').item.json.body.Name }}\n\nIf any of these details are not explicitly available in the chat history, infer them logically from context without adding extra assumptions.\n\nLANGUAGE RULE:\nThe complete output must be written only in Hindi. No English words or mixed language is allowed.\n\nThis is conversasion: Questions:{{ $json.User[0] }} , Answers: {{ $json.AI }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        -96
+      ],
+      "id": "adeca481-64b2-41cb-bfa2-161807a695fb",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.privyr.com/api/v1/incoming-leads/0vZfjMQw/55JFmC8u#generic-webhook",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={ \t\t\n\"name\": \"{{ $('Webhook').item.json.body.Name }}\", \t\t\n\"phone\": \"{{ $('Webhook').item.json.body['Agent Contact'] }}\", \t\t\n\"other_fields\": { \t\t\n\"summary\": \"{{ $json.output[0].content[0].text }}\", \t\t\n\"lead for\": \"OSHI\", \t\t\n\"lead Source\": \"Facebook\" \t} }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "1555d7aa-0099-4d5e-908d-1e26076873f1",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.privyr.com/api/v1/incoming-leads/0vZfjMQw/yppsh61n#generic-webhook",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={ \t\t\n\"name\": \"{{ $('Webhook').item.json.body.Name }}\", \t\t\n\"phone\": \"{{ $('Webhook').item.json.body['Agent Contact'] }}\", \t\t\n\"other_fields\": { \t\t\n\"summary\": \"{{ $json.output[0].content[0].text }}\", \t\t\n\"lead for\": \"OSHI\", \t\t\n\"lead Source\": \"Facebook\" \t} }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        640,
+        -96
+      ],
+      "id": "80890ba4-4be4-4d57-b57d-256b6224c857",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -608,
+        -96
+      ],
+      "id": "39f2723f-71bf-4528-bbb4-72ae884b58a7",
+      "name": "Wait",
+      "webhookId": "7a39e516-cfc3-4f3e-b997-5d2d4c97d258"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "0e048f2e-b06e-486c-9f56-b9f7f96fa5ab",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "mEaVKIH9dvcLGSmK-syhs",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}

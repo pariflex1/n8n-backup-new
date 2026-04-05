@@ -1,0 +1,584 @@
+{
+  "name": "Google Sheets - Process One Row Every Hour",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "069113d0-88b9-4e07-8075-3d617c25695d",
+      "name": "Run Every Hour",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM",
+          "mode": "list",
+          "cachedResultName": "Getleadsforasif",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1204403590,
+          "mode": "list",
+          "cachedResultName": "Villas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM/edit#gid=1204403590"
+        },
+        "options": {}
+      },
+      "id": "d598f8e2-4463-4961-9806-08c2b2fc5d36",
+      "name": "Read Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -400,
+        -272
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.Processed }}",
+              "operation": "notEqual",
+              "value2": "TRUE"
+            }
+          ]
+        }
+      },
+      "id": "dd36c418-1af4-4eab-bb39-24bee2946f78",
+      "name": "Is Not Processed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "fe2385aa-c248-4ebe-9332-1c6cf1784df5",
+      "name": "Take One Row",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM",
+          "mode": "list",
+          "cachedResultName": "Getleadsforasif",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1204403590,
+          "mode": "list",
+          "cachedResultName": "Villas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ysb0ozO7S5ICRYJkOJSXaudKobEnkQsEQ-F3bQ7p_mM/edit#gid=1204403590"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contact": "={{ $json.Contact }}",
+            "Client Name": "={{ $json['Client Name'] }}",
+            "Processed": "TRUE",
+            "Timestamp": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}"
+          },
+          "matchingColumns": [
+            "Contact"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Processed",
+              "displayName": "Processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interested",
+              "displayName": "Interested",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "94142342-9e9a-4d47-b46a-859db2c2cfdc",
+      "name": "Mark Processed",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        272,
+        -272
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"={{ $json.Contact }}\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"mahakal_villa\",\n    \"language\": {\n      \"code\": \"en\"\n    },\n    \"components\": [\n      {\n        \"type\": \"header\",\n        \"parameters\": [\n          {\n            \"type\": \"image\",\n            \"image\": {\n              \"link\": \"https://github.com/pariflex1/WhatsApp-Images/blob/main/mahakal_residency.jpg?raw=true\"\n            }\n          }\n        ]\n      },\n      {\n        \"type\": \"body\",\n        \"parameters\": [\n          {\n            \"type\": \"text\",\n            \"text\": \"{{ $json['Client Name'].trim().split(/\\s+/)[0]}}\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        496,
+        -272
+      ],
+      "id": "c3c19969-0cb4-484a-a504-01ec73fdde22",
+      "name": "hello"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.privyr.com/api/v1/incoming-leads/0vZfjMQw/2IJvNWoS#generic-webhook",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Mark Processed').item.json['Client Name'] }}\",\n  \"phone\": \"{{ $('Mark Processed').item.json.Contact }}\",\n  \"other_fields\": {\n    \"lead_for\": \"Gwalior-Shivpuri Bypass\",\n\"lead source\": \"Ads\",\n        \"about\": \"{{ $('Mark Processed').item.json.About }}\",\n        \"note\": \"{{ $('Mark Processed').item.json.Note }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1168,
+        -272
+      ],
+      "id": "b287b2f5-76f4-4ef1-be3b-45c54a33693d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -272
+      ],
+      "id": "49674efc-3826-430c-9d33-d7ff7b8ab843",
+      "name": "Wait",
+      "webhookId": "d8ce0ef3-7709-420d-932c-2298401f72f5"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc",
+          "mode": "list",
+          "cachedResultName": "Facebook Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 612165011,
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f9VbQmzjyKXIdX49Aej-JEi8CLb1jx6UENVAV1BcbWc/edit#gid=612165011"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Name": "={{ $('Mark Processed').item.json['Client Name'] }}",
+            "Contact": "={{ $('Mark Processed').item.json.Contact }}",
+            "City": "=Jhansi",
+            "Profession": "=Business",
+            "Status": "New Lead",
+            "Project": "Mahakaal Residency",
+            "PropertyType": "Villa",
+            "Budget": "75 Lakh",
+            "UserName": "asif",
+            "UserContact": "7905736165",
+            "LeadSource": "Facebook",
+            "FollowUpDateTime": "={{$now.plus({ days: 3 }).set({ hour: 10, minute: 30 }).toFormat(\"dd/MM/yyyy HH:mm\")}}",
+            "LocationPrefer": "Jhansi",
+            "Note": "="
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Profession",
+              "displayName": "Profession",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Note",
+              "displayName": "Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project",
+              "displayName": "Project",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PropertyType",
+              "displayName": "PropertyType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LocationPrefer",
+              "displayName": "LocationPrefer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FollowUpDateTime",
+              "displayName": "FollowUpDateTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UserName",
+              "displayName": "UserName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UserContact",
+              "displayName": "UserContact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ClientImageUrl",
+              "displayName": "ClientImageUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LeadSource",
+              "displayName": "LeadSource",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        944,
+        -272
+      ],
+      "id": "c4416d57-6d3a-472c-98a4-a48f4f74e213",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P8K6iqeAgzytsGCY",
+          "name": "Jhansiproperty"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run Every Hour": {
+      "main": [
+        [
+          {
+            "node": "Read Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Is Not Processed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Not Processed?": {
+      "main": [
+        [
+          {
+            "node": "Take One Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Take One Row": {
+      "main": [
+        [
+          {
+            "node": "Mark Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Processed": {
+      "main": [
+        [
+          {
+            "node": "hello",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hello": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "a5643a64-d195-4e87-ba2a-e0132d1cd123",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "hyMlRfs29c6S10HyxPT5L",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}

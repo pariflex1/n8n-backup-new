@@ -1,0 +1,647 @@
+{
+  "name": "Mahakal Whatsapp message",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": "={{ [\"read\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1328,
+        464
+      ],
+      "id": "2e8a4288-eade-4a2a-a799-56d0ca2e559a",
+      "name": "WhatsApp Trigger",
+      "webhookId": "5701dc9d-cdc2-48d4-9cfb-32904c9a500e",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "wRntNGyXJ1eyP7yd",
+          "name": "Jhansi Property"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer of this: {{ $('WhatsApp Trigger').item.json.messages[0].text.body }}{{ $('WhatsApp Trigger').item.json.messages[0].button.payload }}",
+        "options": {
+          "systemMessage": "=You are Asif, a local property seller, chatting on WhatsApp like a normal human, never as an AI, bot, or automated system. Your personal contact number is 7905736165. You must behave like a local personal seller, not a company employee.\n\nAgent Name: **Asif** Contact: **7905736165** \n\n### CORE ROLE\n\nYour role is to talk naturally, build trust, and guide interested buyers toward a site visit at **Jai Mahakal Residency**. You must feel like a real person typing on WhatsApp, not a brochure.\n\n### KNOWLEDGE BASE (STRICT ADHERENCE)\n\nYou may respond only using information explicitly present here:\n\n* **Project Name:** Jai Mahakal Residency.\n* **Location:** First Gated Colony at Pauj Nehar Par.\n* **Property Type:** 3 BHK Duplex (22.5 ft front × 45 ft depth).\n* **Area:** Constructed area more than 1700 sq. ft..\n* **Features:** Single gate colony, 24/7 security guards, CCTV, 30 ft roads, and a Temple.\n* **Quality:** Supreme quality material used; 25 years no maintenance changes.\n* **Timeline:** Possession in 3 months.\n* **Finance:** Government banks finance available.\n* **Distances:** Avas Vikas (3 km), Sipri Main Market (5.7 km), Railway station (6 km).\n* **Nearby:** Railway workshop, Coach Factory, Gariya Gaon (all < 3 km).\n* **Schools:** Jai Academy, HansRaj, RNS (all < 4 km).\n\n### BRAND HIDING RULE\n\nDo NOT proactively mention the project name. Only if the user asks \"Project ka naam kya hai,\" reply: \"Ji iska naam Jai Mahakal Residency hai\". Otherwise, refer to it as \"Pauj nehar wali side\" or \"Yeh gated colony\".\n\n\n\n### COMMUNICATION STYLE\n\n* Speak like a local man: Use \"Aap,\" \"Ji,\" and natural Hindi/Hinglish.\n* One short sentence per reply.\n* **STRICTLY AVOID:** Emojis, formatting, bullets, or corporate language.\n\n### PROJECT SPECIFICS (FOR ASSET SHARING)\n\n* **If asked for location:** Share only the Google Map link: https://maps.app.goo.gl/EwrUo7DuoP8Gig1N8.\n* **If asked for price:** Starting from 70/- Lakh.\n* **If asked for quality:** Mention the supreme material and 25-year maintenance-free promise.\n\n### SITE VISIT CONVERSION\n\nIf the user shows interest (e.g., \"Achha hai,\" \"Interested\"), immediately suggest a visit:\n\n* \"Ji possession 3 mahine mein mil jayegi, aap site visit kab karna chahenge?\"\n\n### CLOSING RULES\n\n* Say \"Aapka din shubh rahe ji\" or \"Shubh ratri ji\" only if the user says \"OK\" or \"Thank you.\"\n\n### OUTPUT FORMAT\n\nEvery reply must be a single, human-like WhatsApp sentence. No lists. No bold text.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        608
+      ],
+      "id": "6f41b595-cc39-4009-ad90-1be7f071558a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "tableName": "chat_messages",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        928
+      ],
+      "id": "4ba4b649-7c15-4822-901b-309c7cf3e6c2",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "gTwXf9zESDq3qljw",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Call this tool to fetch data of oshi project",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 20,
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        880
+      ],
+      "id": "68d6bceb-1783-4f27-a860-35c2da9fde7a",
+      "name": "Knowledge Base",
+      "credentials": {
+        "supabaseApi": {
+          "id": "1JXnZzXhEXnyD6eE",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        1088
+      ],
+      "id": "4dcc7b4c-d86b-4111-b122-52b6b1964bfa",
+      "name": "Embeddings-OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "oeU3bDddqKmVY1Rx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time": "={{$now.toFormat(\"dd/MM/yyyy HH:mm:ss\")}}",
+            "Name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "Contact": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+            "User": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}{{ $('WhatsApp Trigger').item.json.messages[0].button.payload }}",
+            "AI": "={{ $('AI Agent').item.json.output }}",
+            "Site": "Mahakaal Residency",
+            "Agent Name": "Asif",
+            "Agent Contact": "917905736165"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI",
+              "displayName": "AI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Site",
+              "displayName": "Site",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Name",
+              "displayName": "Agent Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Agent Contact",
+              "displayName": "Agent Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        656
+      ],
+      "id": "3958aea7-e484-4e8e-8a52-e2732ff5d581",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "387521651107625",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        656
+      ],
+      "id": "36bb615d-2a7d-4bad-8f4d-90fa97122cfd",
+      "name": "Send message and wait for response",
+      "webhookId": "b60e0c75-c4ed-4b7b-a550-3f35653bdbcf",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "llUMWwy19KdNqZma",
+          "name": "Jhansi Property"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "status",
+              "value": "read"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $json.messages[0].id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -880,
+        656
+      ],
+      "id": "0772ec18-5e9d-409b-954a-2652478cded7",
+      "name": "read"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\": \"read\",\n  \"message_id\": \"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\": \"text\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -656,
+        656
+      ],
+      "id": "926cffbf-70df-4d2e-9f5b-0fa27743681e",
+      "name": "typing"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        880
+      ],
+      "id": "ee259fcd-4f22-4a5a-a74e-61abcbdfb12a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1IcSG8lyD3TFykdY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messages[0].button.payload }}",
+                    "rightValue": "Google Location",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8ff9580e-2081-42a9-9414-027b85959ec1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Location"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f3888b0f-5ee5-448d-9863-a24a93d44d94",
+                    "leftValue": "={{ $json.messages[0].button.payload }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bot"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        448
+      ],
+      "id": "e75c6dd9-c74b-4ee4-a263-db1dec87e1b0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}\",\n  \"type\": \"location\",\n  \"location\": {\n\"latitude\": 25.425746,    \n\"longitude\": 78.525925, \n          \"address\": \"Pauj Nehar Par, Jhansi\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -880,
+        272
+      ],
+      "id": "c03aa0f3-0f0d-4257-9a48-dbb2f2e803c3",
+      "name": "Location"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -368,
+        880
+      ],
+      "id": "6c9cfcfd-55a6-47da-93da-d1270a4826ff",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAMPjrTPZB3MBQpH7EoTtleOUp6wf2eNkN60sB8y1upUDVktKpjkWES5wZBttG37UwrwBpSmUeFkLk7SUZBcGpOwTiYUa4sBck0HzgARYYWxEhZAIGXTRZCTCAWxVdzZBN8JkAEAWWoVkO9BcnIM8ZAi1KADCdVtutrYaaz3DE4wT0OiZCnez89S9bETYqBcVAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"919198433007\",\n  \"type\": \"document\",\n  \"document\": {\n    \"link\": \"https://drive.google.com/uc?export=download&id=1ZcCBzdKu43d6Ftn_YkF936m92Qj1Lpwd\",\n\"filename\": \"mahakal.pdf\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -848,
+        464
+      ],
+      "id": "c6edffa8-cacc-4a66-8f7a-6c0f2105ff20",
+      "name": "Broucher"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        []
+      ]
+    },
+    "Knowledge Base": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Embeddings-OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read": {
+      "main": [
+        [
+          {
+            "node": "typing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "typing": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Location",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "eb7d29f2-3aeb-4aa7-9490-c693602606c3",
+  "meta": {
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "FAFUG7T1BWy5Z1yH",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}

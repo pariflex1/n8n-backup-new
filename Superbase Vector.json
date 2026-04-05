@@ -1,0 +1,410 @@
+{
+  "name": "Superbase Vector",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n  let content = \"\";\n\n  if (data.Question && data.Answer) {\n    content = data.Answer;\n  } else if (data['Product Name'] && data.Description) {\n    content = `Product\nCategory: ${data.Category || \"General\"}\nName: ${data['Product Name']}\nDescription: ${data.Description}\nSize: ${data.Size || \"N/A\"}\nPrice: ${data.Price || \"N/A\"}`;\n  } else {\n    content = `Other Data\n${JSON.stringify(data)}`;\n  }\n\n  return {\n    json: {\n      content: content\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f10ec433-2ef0-4a81-ae44-73498222d80e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "jai_mahakal",
+          "mode": "list",
+          "cachedResultName": "jai_mahakal"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        0
+      ],
+      "id": "47f84f75-9337-4fa8-97c8-158741eb305f",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "1JXnZzXhEXnyD6eE",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        224
+      ],
+      "id": "491df188-e4fc-4580-98d0-3a946c5244bc",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY",
+          "mode": "list",
+          "cachedResultName": "RVMC Chatbot",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 468720184,
+          "mode": "list",
+          "cachedResultName": "asif",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WRte4yYM-bXQKcjl1FM1z7H7K0oaksOMVyS4wT9MhpY/edit#gid=468720184"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "233079fc-f677-422f-9546-084c1ae652fa",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uJqb7ndcbLq8v9jO",
+          "name": "Dhanistadigital"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "path": "rvmc",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        496
+      ],
+      "id": "a8970d56-b769-4483-869e-5949858dbd17",
+      "name": "Webhook",
+      "webhookId": "739e3070-e4e5-4d15-b048-5529c8c523bb"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cb84fa11-ec27-4877-83ea-3a11a195fc92",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "cc0f2c01-431e-4fc0-9386-3c31b52fec46",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "rvmc",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        400
+      ],
+      "id": "a2a31b3d-658f-407b-80c8-64d363905200",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        464,
+        400
+      ],
+      "id": "96d447e6-b324-4505-8024-e3c7e56a23db",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6de59eb4-a400-4c3a-b553-5ab74987778c",
+              "leftValue": "={{ $json.body.entry[0].changes[0].value.statuses[0].status }}",
+              "rightValue": "read",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        592
+      ],
+      "id": "5703b8a3-a29a-4098-81d6-d514f95b02c4",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8adf164e-e24e-4693-ad9c-540031adbc66",
+              "name": "phone_number_id",
+              "value": "={{ $json.body.entry[0].changes[0].value.metadata.phone_number_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e90a0536-0be2-43e2-9580-4fd111f19d57",
+              "name": "user_number",
+              "value": "={{ $json.body.entry[0].changes[0].value.contacts[0].wa_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ffe41fb9-29de-4fbc-8855-209c48946961",
+              "name": "bot_number",
+              "value": "={{ $json.body.entry[0].changes[0].value.metadata.display_phone_number }}",
+              "type": "string"
+            },
+            {
+              "id": "678e1e3f-c93a-4339-bd3a-77f3b6a2f832",
+              "name": "WABA_id",
+              "value": "={{ $json.body.entry[0].id }}",
+              "type": "string"
+            },
+            {
+              "id": "1dfdb50b-aae0-4614-9923-d73c50aa9cc9",
+              "name": "app_version",
+              "value": "v24.0",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        592
+      ],
+      "id": "02b32377-6190-4a8d-b8d7-3f21be2e1894",
+      "name": "set_variable"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/387521651107625/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAPaOJHZBhEkBQqhILZAJ0SldTkZCCheZC276IZBtZAtoVgfP9Lo2FDcGBh8dFrp0n40Hmb8PRMloKZBCUhyjqXxqiRHo7YYkBYF8RFZAbrYBKeBf7ZAhFQCb0Dksk4WVhab5OgNlj47mZCDB8KxpCP6VBT9dZAohBh5ePMQ8hRX68t3XsOi5ty2CUAZBQPzJ0M2AgZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('Webhook').item.json.body.entry[0].changes[0].value.contacts[0].wa_id }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"my name is vicky\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        688,
+        592
+      ],
+      "id": "30073035-aae3-402b-bbc7-acdbdaaef653",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        592,
+        208
+      ],
+      "id": "5054c864-7dc7-45d5-86c7-e1bc90f9ee9c",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1IcSG8lyD3TFykdY",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "set_variable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_variable": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "36a050f9-5f18-47d5-9df3-dc68a2718a7d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "837ed43bae39a762daedcbdbccbfcfa320fdb3e4e37862627fba69fd121c4398"
+  },
+  "id": "GATXd-c5s7JZgM3cikUQ3",
+  "tags": [
+    {
+      "updatedAt": "2026-03-01T07:32:27.584Z",
+      "createdAt": "2026-03-01T07:32:27.584Z",
+      "id": "2EME4OVbx7pfnyD2",
+      "name": "Active"
+    }
+  ]
+}
